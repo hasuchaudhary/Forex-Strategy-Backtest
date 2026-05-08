@@ -1,5 +1,6 @@
 import backtrader as bt
 import yfinance as yf
+import pandas as pd  # આ નવી લાઈબ્રેરી ઉમેરી છે
 import datetime
 
 class FVGStrategy(bt.Strategy):
@@ -36,10 +37,14 @@ if __name__ == '__main__':
 
     print("ડેટા ડાઉનલોડ થઈ રહ્યો છે...")
     
-    # yfinance ની મદદથી ડેટા ડાઉનલોડ કરવાની નવી રીત
+    # yfinance ની મદદથી ડેટા ડાઉનલોડ
     dataframe = yf.download('EURUSD=X', start='2023-01-01', end='2023-12-31', progress=False)
     
-    # ડેટાને Backtrader માં ઉમેરવો
+    # ઉકેલ: yfinance ના ડબલ લેયર કોલમ (Tuple) ને સાદા ટેક્સ્ટમાં ફેરવવાનો કોડ
+    if isinstance(dataframe.columns, pd.MultiIndex):
+        dataframe.columns = dataframe.columns.get_level_values(0)
+    
+    # ક્લીન કરેલો ડેટા Backtrader માં ઉમેરવો
     data = bt.feeds.PandasData(dataname=dataframe)
     cerebro.adddata(data)
     
