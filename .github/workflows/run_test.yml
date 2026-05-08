@@ -1,6 +1,5 @@
 name: Forex Strategy Backtest
 
-# જ્યારે પણ તમે નવો કોડ મુકશો અથવા જાતે બટન દબાવશો ત્યારે આ રન થશે
 on: [push, workflow_dispatch]
 
 jobs:
@@ -16,7 +15,8 @@ jobs:
           python-version: '3.10'
           
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        # અહીં આપણે સીધું જ pip install કમાન્ડ આપી દીધો છે 
+        run: pip install backtrader requests
         
       - name: Run Backtest
         run: python strategy.py
