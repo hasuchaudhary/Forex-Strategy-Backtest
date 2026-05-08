@@ -15,8 +15,8 @@ jobs:
           python-version: '3.10'
           
       - name: Install dependencies
-        # અહીં આપણે સીધું જ pip install કમાન્ડ આપી દીધો છે 
-        run: pip install backtrader requests
+        # અહીં નવી yfinance અને pandas લાઈબ્રેરી ઉમેરી છે
+        run: pip install backtrader yfinance pandas
         
       - name: Run Backtest
         run: python strategy.py
