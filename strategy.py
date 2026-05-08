@@ -1,4 +1,5 @@
 import backtrader as bt
+import yfinance as yf
 import datetime
 
 class FVGStrategy(bt.Strategy):
@@ -33,16 +34,17 @@ if __name__ == '__main__':
     cerebro = bt.Cerebro()
     cerebro.addstrategy(FVGStrategy)
 
-    # GitHub પર ટેસ્ટ કરવા માટે ફેક ડેટા જનરેટ કર્યો છે 
-    data = bt.feeds.YahooFinanceData(
-        dataname='EURUSD=X',
-        fromdate=datetime.datetime(2023, 1, 1),
-        todate=datetime.datetime(2023, 12, 31),
-        reverse=False)
+    print("ડેટા ડાઉનલોડ થઈ રહ્યો છે...")
     
+    # yfinance ની મદદથી ડેટા ડાઉનલોડ કરવાની નવી રીત
+    dataframe = yf.download('EURUSD=X', start='2023-01-01', end='2023-12-31', progress=False)
+    
+    # ડેટાને Backtrader માં ઉમેરવો
+    data = bt.feeds.PandasData(dataname=dataframe)
     cerebro.adddata(data)
+    
     cerebro.broker.setcash(10000.0)
-    cerebro.addsizer(bt.sizers.FixedSize, stake=100)
+    cerebro.addsizer(bt.sizers.FixedSize, stake=100) # લોટ સાઈઝ
     
     print('શરૂઆતનું બેલેન્સ: $%.2f' % cerebro.broker.getvalue())
     cerebro.run()
